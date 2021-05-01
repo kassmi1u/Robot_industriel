@@ -72,3 +72,4 @@ class Robot_manipulator :
         plt.show()
 
 
+

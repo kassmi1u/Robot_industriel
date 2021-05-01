@@ -50,8 +50,8 @@ class Robot_manipulator :
             liste2.append(self.get_coord_pince())
         return liste1, liste2
 
-    def train(self,th1,th2):
-
+    def train(self,th1=np.linspace(0, 2*np.pi,100),th2= np.linspace(0, 2*np.pi,100)):
+        
         P,Q = self.generate_liste_of_coord(th1,th2)
         Fig=plt.figure(figsize=(8,8))
         ax = Fig.add_subplot(111, aspect='equal')
@@ -71,9 +71,4 @@ class Robot_manipulator :
         anim = animation.FuncAnimation(Fig, animate, np.arange(1, len(th1)), interval=50, blit=True)
         plt.show()
 
-#Test 
-th1 = np.linspace(0, np.pi,100)
-th2 = np.linspace(0, np.pi/2,100)
-longg = 0.5
-bra = Robot_manipulator()
-bra.simulate(th1,th2)
+

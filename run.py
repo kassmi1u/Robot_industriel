@@ -1,14 +1,13 @@
-from BackPro_python import NN
 from online_trainer import OnlineTrainer
+from BackProp_Python_v2 import NN
 from Python_simulation import Robot_manipulator
 import numpy as np
 import json
 import threading
 
 
-th1 = np.linspace(0, np.pi,100)
-th2 = np.linspace(0, np.pi/2,100)
-robot = Robot_manipulator(th1,th2)
+
+robot = Robot_manipulator()
 HL_size= 10 # nbre neurons of Hiden layer
 network = NN(3, HL_size, 2)
 
@@ -37,8 +36,6 @@ elif choice == 'n':
     trainer.training = False
 
 target = input("Enter the first target : x y  --> ")
-while ( input[0] > 1 or input[1] < 0 ) : 
-    target = input("Enter the first target : x y  --> ")
 target = target.split()
 for i in range(len(target)):
     target[i] = float(target[i])
@@ -69,8 +66,6 @@ while(continue_running):
             trainer = trainer_bis
             trainer.training = False
         target = input("Move the robot to the initial point and enter the new target : x y  --> ")
-        while ( input[0] > 1 or input[1] < 0 ) : 
-            target = input("Enter the first target : x y  --> ")
         target = target.split()
         for i in range(len(target)):
             target[i] = float(target[i])

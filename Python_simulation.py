@@ -49,27 +49,37 @@ class Robot_manipulator :
             liste1.append(self.get_coord_coude())
             liste2.append(self.get_coord_pince())
         return liste1, liste2
-
-    def train(self,th1=np.linspace(0, 2*np.pi,100),th2= np.linspace(0, 2*np.pi,100)):
+    
+    
         
-        P,Q = self.generate_liste_of_coord(th1,th2)
+    def draw_env(self,target) : 
         Fig=plt.figure(figsize=(8,8))
         ax = Fig.add_subplot(111, aspect='equal')
         ax.set_xlim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
         ax.set_ylim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
         ax.set_title('mouvement du bras de robot',fontsize=30)
-        line1, = ax.plot([0.,self.L1], [0.,0.], 'o-b', lw=18 , markersize=25)
-        line2, = ax.plot([self.L1,self.L1+self.L2], [0.,0.], 'o-', lw=18 , markersize=25)
+        ax.scatter([target[0]],[target[1]],marker='+',s=800,c="red")
+        return Fig,ax
+        
+    def draw_robot(self,fig,ax) :
+        line1, = ax.plot([0.,self.L1], [0.,0.], 'o-b', lw=10 , markersize=25)
+        line2, = ax.plot([self.L1,self.L1+self.L2], [0.,0.], 'o-', lw=10 , markersize=25)
         pt1    = ax.scatter([self.L1+self.L2],[0.],marker="$\in$",s=800,c="black",zorder=3)
+        return line1,line2,pt1
+        
 
+    def train(self,th1,th2,line1,line2,pt1,Fig):
+        
+        P,Q = self.generate_liste_of_coord(th1,th2)
+        
         def animate(i):
             line1.set_data([0.,P[i][0]],[0.,P[i][1]])
             line2.set_data([P[i][0],Q[i][0]],[P[i][1],Q[i][1]])
             pt1.set_offsets([Q[i][0],Q[i][1]])
             return line1,line2,pt1
 
-        anim = animation.FuncAnimation(Fig, animate, np.arange(1, len(th1)), interval=50, blit=True)
+        anim = animation.FuncAnimation(Fig, animate, np.arange(1, len(th1)), interval=50, blit=True,repeat = False)
         plt.show()
 
 
-
+        

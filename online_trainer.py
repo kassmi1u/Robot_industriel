@@ -23,13 +23,15 @@ class OnlineTrainer:
         self.training = False
         self.running = True
 
-    def train(self, target):
+    def train(self, targett):
         
         position = self.robot.get_coord_pince()
         alpha_1 = self.alpha[0]
         alpha_2 = self.alpha[1]
         th1 = []
         th2 = []
+        target = [float(targett[0].get()),float(targett[1].get())]
+        print(target)
         """position_x = []
         position_y = []
         position_x.append(position[0])
@@ -41,7 +43,7 @@ class OnlineTrainer:
         #network_input[1] = 
         robot_a_bouge = time.time()
         i=0
-        while i<150 and self.running: 
+        while abs(position[0]-target[0] )> 0.0001 and  abs(position[1]-target[1]) > 0.0001 : 
             debut = time.time()
             network_input = [(position[0]-target[0])*self.alpha[0], (position[1]-target[1])*self.alpha[1]]
             command = self.network.runNN(network_input) # propage erreur et calcul vitesses roues instant t  # Fonction à changer

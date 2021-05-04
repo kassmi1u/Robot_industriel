@@ -43,7 +43,7 @@ class OnlineTrainer:
         #network_input[1] = 
         robot_a_bouge = time.time()
         i=0
-        while abs(position[0]-target[0] )> 0.0001 and  abs(position[1]-target[1]) > 0.0001 : 
+        while abs(position[0]-target[0]) > 0.001 and  abs(position[1]-target[1]) > 0.001 : 
             debut = time.time()
             network_input = [(position[0]-target[0])*self.alpha[0], (position[1]-target[1])*self.alpha[1]]
             command = self.network.runNN(network_input) # propage erreur et calcul vitesses roues instant t  # Fonction à changer

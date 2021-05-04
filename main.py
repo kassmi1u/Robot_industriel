@@ -37,46 +37,70 @@ load_model = tk.IntVar()
 learning = tk.IntVar()
 target_x = tk.DoubleVar()
 target_y = tk.DoubleVar()
+hl_size = tk.IntVar()
+load_model.set(1)
+learning.set(1)
 
 
+
+# Network Settings zone
+frame2 = ttk.LabelFrame(root, text=' Network Settings ', width=370, height=110)
+frame2.place(x=23, y=45)
+"""
+# target_y text
+Label1 = ttk.Label(root, text = 'Hidden Layer size')
+Label1.place (x=50,y=80)
+
+
+# Hidden Layer size value
+boite1 = ttk.Spinbox(root,from_=5,to=100,increment=1,textvariable=hl_size,width=5)
+boite1.place(x=300,y=78)
+"""
 # Network zone
 frame1 = ttk.LabelFrame(root, text=' Network ', width=370, height=110)
-frame1.place(x=23, y=45)
+frame1.place(x=23, y=183)
 
 # load_model box
 switch = ttk.Checkbutton(root, text='Activate to load the previous network', style='Switch', variable=load_model, offvalue=0, onvalue=1)
-switch.place(x=50, y=80)
+switch.place(x=50, y=218)
 switch.invoke()
 
 # learning box
-switch = ttk.Checkbutton(root, text='Activate to learn', style='Switch', variable=learning, offvalue=0, onvalue=1)
-switch.place(x=50, y=114)
-switch.invoke()
+switch1 = ttk.Checkbutton(root, text='Activate to learn', style='Switch', variable=learning, offvalue=0, onvalue=1)
+switch1.place(x=50, y=252)
+switch1.invoke()
 
 # Target zone
-frame1 = ttk.LabelFrame(root, text=' Target ', width=370, height=130)
-frame1.place(x=23, y=183)
+frame2 = ttk.LabelFrame(root, text=' Target ', width=370, height=130)
+frame2.place(x=23, y=321)
 
 # target_x text
-Label1 = ttk.Label(root, text = 'Enter the coordinate x of the target ')
-Label1.place (x=50,y=220)
+Label3 = ttk.Label(root, text = 'Enter the coordinate x of the target ')
+Label3.place (x=50,y=358)
 
 # target_x value
-boite = ttk.Spinbox(root,from_=0.05,to=0.95,increment=0.05,textvariable=target_x,width=5)
-boite.place(x=300,y=215)
+boite3 = ttk.Spinbox(root,from_=0.05,to=0.95,increment=0.05,textvariable=target_x,width=5)
+boite3.place(x=300,y=353)
 
 # target_y text
-Label1 = ttk.Label(root, text = 'Enter the coordinate y of the target  ')
-Label1.place (x=50,y=260)
+Label2 = ttk.Label(root, text = 'Enter the coordinate y of the target  ')
+Label2.place (x=50,y=398)
 
 # target_y box 
-boite = ttk.Spinbox(root,from_=0.05,to=0.95,increment=0.05,textvariable=target_y,width=5)
-boite.place(x=300,y=255)
+boite4 = ttk.Spinbox(root,from_=0.05,to=0.95,increment=0.05,textvariable=target_y,width=5)
+boite4.place(x=300,y=393)
 
-
+#put an image 
+photo = tk.PhotoImage(file='logominesnancy.png')
+image_label = ttk.Label(
+    root,
+    image=photo,
+    padding=5
+)
+image_label.place(x=415,y=52)
 
 robot = Robot_manipulator()
-HL_size= 10
+HL_size= 25 #int(hl_size.get())
 network = NN(2,HL_size,2)
 training = OnlineTrainer(robot,network)
 thetas1 =[]
@@ -102,10 +126,10 @@ def train_network() :
     if learning == 1:
         training.training = True
     elif learning == 0:
-        training.training = False    
-    print("départ")
+        training.training = False   
     thetas1,thetas2 = training.train(target)
-    print("arrivé")
+    
+
 
 def animate() : 
     global thetas1,thetas2,target_x,target_y
@@ -114,16 +138,31 @@ def animate() :
     line1, line2, pt1 = robot.draw_robot(Fig,ax)
     robot.train(thetas1,thetas2,line1,line2,pt1,Fig)    
 
-button = ttk.Button(root, text='Train', command=train_network)
-button.place(x=480, y=320)
+def quit():
+    root.destroy()
 
-button = ttk.Button(root, text='Animate', command=animate)
-button.place(x=600, y=320)
+def Reset():
+    global target_x,target_y,learning,load_model
+    target_x.set(0.00)
+    target_y.set(0.00)
+    learning.set(0)
+    load_model.set(0)
 
-"""
-json_obj = {"input_weights": network.wi, "output_weights": network.wo}
-with open('last_w.json', 'w') as fp:
+button1= ttk.Button(root, text='Train', width=18, command=train_network)
+button1.place(x=23, y=470)
+
+button2 = ttk.Button(root, text='Animate',width=18,command=animate)
+button2.place(x=215, y=470)
+
+button3 = ttk.Button(root, text='Quit',width=18,command = quit)
+button3.place(x=600, y=470)
+
+button4 = ttk.Button(root, text='Reset',width = 18, command=Reset)
+button4.place(x=408, y=470)
+
+"""json_obj = {"input_weights": network.wi, "output_weights": network.wo}
+with open(file, 'w') as fp:
     json.dump(json_obj, fp)
-
 print("The last weights have been stored in last_w.json")"""
+
 root.mainloop()

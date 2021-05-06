@@ -19,7 +19,7 @@ class OnlineTrainer:
         """
         self.robot = robot
         self.network = NN
-        self.alpha = [1,1]  # normalition avec limite du monde cartesien = -3m � + 3m
+        self.alpha = [1/3,1/3]  # normalition avec limite du monde cartesien = -3m � + 3m
         self.training = False
         self.running = True
 
@@ -89,11 +89,11 @@ class OnlineTrainer:
                 # The two args after grad are the gradient learning steps for t+1 and t
                 # si critere augmente on BP un bruit fction randon_update, sion on BP le gradient
                 
-                if (crit_ap <= crit_av) :
-                    self.network.backPropagate(grad, 0.5,0)# grad, pas d'app, moment
-                else :
+                #if (crit_ap <= crit_av) :
+                self.network.backPropagate(grad, 0.5,0)# grad, pas d'app, moment
+                #else :
                     #self.network.random_update(0.001)
-                    self.network.backPropagate(grad, 0.5 ,0)
+                    #self.network.backPropagate(grad, 0.5 ,0)
                     
         #self.robot.train(th1,th2) 
         #self.robot.set_theta([0,0]) # stop  apres arret  du prog d'app                 # Fonction à changer 

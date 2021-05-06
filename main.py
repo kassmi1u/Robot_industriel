@@ -38,8 +38,6 @@ learning = tk.IntVar()
 target_x = tk.DoubleVar()
 target_y = tk.DoubleVar()
 hl_size = tk.IntVar()
-load_model.set(1)
-learning.set(1)
 
 
 
@@ -91,16 +89,10 @@ boite4 = ttk.Spinbox(root,from_=0.05,to=0.95,increment=0.05,textvariable=target_
 boite4.place(x=300,y=393)
 
 #put an image 
-photo = tk.PhotoImage(file='logominesnancy.png')
-image_label = ttk.Label(
-    root,
-    image=photo,
-    padding=5
-)
-image_label.place(x=415,y=52)
+
 
 robot = Robot_manipulator()
-HL_size= 25 #int(hl_size.get())
+HL_size= 20 #int(hl_size.get())
 network = NN(2,HL_size,2)
 training = OnlineTrainer(robot,network)
 thetas1 =[]
@@ -128,6 +120,11 @@ def train_network() :
     elif learning == 0:
         training.training = False   
     thetas1,thetas2 = training.train(target)
+    json_obj = {"input_weights": network.wi, "output_weights": network.wo}
+    with open(file, 'w') as fp:
+        json.dump(json_obj, fp)
+    print("The last weights have been stored in last_w.json")
+    print("arrivé")
     
 
 

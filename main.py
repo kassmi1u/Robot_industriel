@@ -134,10 +134,13 @@ training= OnlineTrainer_2ddl(robot,network)
 thetas1 =[]
 thetas2 =[]
 thetas3 =[]
-file='last_w.json'
+file_2ddl='last_w_2ddl.json'
+file_3ddl='last_w_3ddl.json'
 
 def train_network() :
-    global thetas1,thetas2,thetas3,network,HL_size,file,training,load_model,learning,target_x,target_y,network,robot,step,moment
+
+    global thetas1,thetas2,thetas3,network,HL_size,file_2ddl,file_3ddl,\
+    training,load_model,learning,target_x,target_y,network,robot,step,moment
 
     HL_size = int(hidden.get())
     print(HL_size)
@@ -150,10 +153,12 @@ def train_network() :
     if int(choise.get()) == 1 : 
         robot = robot_2ddl
         training = training_2ddl
+        file = file_2ddl
         
     else :
         robot = robot_3ddl
         training = training_3ddl
+        file = file_3ddl
 
     training.pas = float(step.get())
     training.moment = float(moment.get())

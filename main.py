@@ -18,7 +18,7 @@ root = tk.Tk()
 root.title('Azure')
 
 window_height = 530
-window_width = 800
+window_width = 1000
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
@@ -36,19 +36,23 @@ options = ['', 'OptionMenu', 'Value 1', 'Value 2']
 # Variable values
 load_model = tk.IntVar()
 learning = tk.IntVar()
+save_animation = tk.IntVar()
 target_x = tk.DoubleVar()
 target_y = tk.DoubleVar()
 hidden = tk.IntVar()
 choise = tk.IntVar()
 step = tk.DoubleVar()
 moment = tk.DoubleVar()
+animation_name= tk.StringVar()
 
 moment.set(0.00)
 step.set(0.5)
 choise.set(1)
-load_model.set(1)
-learning.set(1)
 hidden.set(20)
+save_animation.set(1)
+learning.set(1)
+load_model.set(1)
+
 
 
 # Network Settings zone
@@ -107,13 +111,31 @@ boite4.place(x=300,y=393)
 
 # Robot model zone
 frame21 = ttk.LabelFrame(root, text='  Robot model  ', width=170, height=110)
-frame21.place(x=413, y=183)
+frame21.place(x=413, y=45)
 
 # Robot model choise
 choise1 = ttk.Radiobutton(frame21, text=' Bras à 2DDL', variable=choise, value=1)
 choise1.place(x=20, y=15)
 choise2 = ttk.Radiobutton(frame21, text=' Bras à 3DDL', variable=choise, value=2)
 choise2.place(x=20, y=45)
+
+# Obstace zone
+frame22 = ttk.LabelFrame(root, text='  Obstacle ', width=170, height=110)
+frame22.place(x=413, y=183)
+
+# Animation zone
+frame23 = ttk.LabelFrame(root, text='  Animation ', width=170, height=130)
+frame23.place(x=413, y=321)
+
+# Save Animation Button
+switch2 = ttk.Checkbutton(frame23, text=' Activate to save\n the animation as\n a Gif image', style='Switch', variable=save_animation, offvalue=0, onvalue=1)
+switch2.place(x=10, y=10)
+switch2.invoke()
+
+# Gif Image name
+Answer = ttk.Entry(frame23,text = "File name ",width = 15,textvariable=animation_name)
+Answer.insert(0,'File name')
+Answer.place(x=10,y=70)
 
 # Hidden Layer text
 Label1 = ttk.Label(root, text = 'Hidden Layer size')
@@ -123,9 +145,14 @@ Label1.place (x=50,y=80)
 boite1 = ttk.Spinbox(root,from_=5,to=100,increment=1,textvariable=hidden,width=5)
 boite1.place(x=65,y=106)
 
+# Graph zone
+Graph_frame = ttk.LabelFrame(root, text='  Graph  ', width=370, height=130)
+Graph_frame.place(x=605, y=321)
 
-
-    
+#Trajectory Label 
+tragectory_Label = ttk.Label(Graph_frame,text = "The trajectory of the clamp, the elbows .. ")
+tragectory_Label.place(x=15,y=10)
+ 
      
 HL_size = int(hidden.get())
 network = NN(2,HL_size,2)
@@ -136,11 +163,12 @@ thetas2 =[]
 thetas3 =[]
 file_2ddl='last_w_2ddl.json'
 file_3ddl='last_w_3ddl.json'
+state_train = False
 
 def train_network() :
 
     global thetas1,thetas2,thetas3,network,HL_size,file_2ddl,file_3ddl,\
-    training,load_model,learning,target_x,target_y,network,robot,step,moment
+    training,load_model,learning,target_x,target_y,network,robot,step,moment,state_train
 
     HL_size = int(hidden.get())
     print(HL_size)
@@ -184,17 +212,18 @@ def train_network() :
         thetas1,thetas2 = training.train(target)
     else :
         thetas1,thetas2,thetas3 = training.train(target)
-
+    state_train = True
     json_obj = {"input_weights": network.wi, "output_weights": network.wo}
     with open(file, 'w') as fp:
         json.dump(json_obj, fp)
     print("The last weights have been stored in last_w.json")
     print("arrivé")
     
-
-
 def animate() : 
     global thetas1,thetas2,thetas3,target_x,target_y,robot
+    if int(save_animation.get()) == 1 : 
+        robot.save = True
+        robot.name_file = str(animation_name.get())
     tar = [float(target_x.get()),float(target_y.get())]
     Fig, ax = robot.draw_env(tar)
     if int(choise.get()) == 1 :
@@ -204,7 +233,6 @@ def animate() :
         line1,line2,line3, pt1 = robot.draw_robot(Fig,ax)
         robot.train(thetas1,thetas2,thetas3,line1,line2,line3,pt1,Fig) 
        
-
 def quit():
     root.destroy()
 
@@ -216,6 +244,15 @@ def Reset():
     load_model.set(0)
     choise.set(1)
     hidden.set(20)
+
+def plot_graph():
+    global robot,thetas1,thetas2,thetas3,target_x,target_y,state_train
+    tar = [float(target_x.get()),float(target_y.get())]
+    if state_train : 
+        if int(choise.get()) == 1 :
+            robot.draw_Trajectory(thetas1,thetas2,tar)
+        else :
+            robot.draw_Trajectory(thetas1,thetas2,thetas3,tar)
 
 button1= ttk.Button(root, text='Train', width=18, command=train_network)
 button1.place(x=23, y=470)
@@ -229,9 +266,7 @@ button3.place(x=600, y=470)
 button4 = ttk.Button(root, text='Reset',width = 18, command=Reset)
 button4.place(x=408, y=470)
 
-"""json_obj = {"input_weights": network.wi, "output_weights": network.wo}
-with open(file, 'w') as fp:
-    json.dump(json_obj, fp)
-print("The last weights have been stored in last_w.json")"""
+show_button1 = ttk.Button(Graph_frame, text=' Show ',width = 7, command=plot_graph)
+show_button1.place(x=270, y=5)
 
 root.mainloop()

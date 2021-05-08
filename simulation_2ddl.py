@@ -11,6 +11,7 @@ rcParams['font.size'] = 14
 from IPython.core.display import HTML
 from IPython.display import display,Image
 from matplotlib import animation
+from matplotlib.animation import PillowWriter
 from sympy.physics.vector import init_vprinting
 init_vprinting(use_latex='mathjax', pretty_print=False)
 
@@ -24,6 +25,8 @@ class Robot_manipulator_2ddl :
         self.theta2s = 0
         self.L1 = 0.5
         self.L2 = 0.5
+        self.save = False
+        self.name_file = "Animation_001"
 
     def set_theta(self,nv_th1,nv_th2) : 
         self.theta1s = nv_th1
@@ -49,11 +52,43 @@ class Robot_manipulator_2ddl :
             liste1.append(self.get_coord_coude())
             liste2.append(self.get_coord_pince())
         return liste1, liste2
+
+    """def draw_graph_grad(grad,time):
+
+        data2 = {'Grad': [1920,1930,1940,1950,1960,1970,1980,1990,2000,2010],
+         'Unemployment_Rate': [9.8,12,8,7.2,6.9,7,6.5,6.2,5.5,6.3]
+        }
+        df2 = DataFrame(data2,columns=['Year','Unemployment_Rate'])
+        figure2 = plt.Figure(figsize=(5,4), dpi=100)
+        ax2 = figure2.add_subplot(111)
+        ax2.set_xlim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
+        ax2.set_ylim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
+        df2 = df2[['Year','Unemployment_Rate']].groupby('Year').sum()
+        df2.plot(kind='line', legend=True, ax=ax2, color='r',marker='o', fontsize=10)
+        ax2.set_title('Year Vs. Unemployment Rate') """
     
+    def draw_Trajectory(self,th1,th2,target) : 
+        fig, ax2 = plt.subplots(figsize=(7,7))
+        positionQ, positionP = self.generate_liste_of_coord(th1,th2)
+        positionP_x =[]
+        positionP_y =[]
+        positionQ_x =[]
+        positionQ_y =[]
+        for i in range(len(th1)): 
+            positionP_x.append(positionP[i][0])
+            positionP_y.append(positionP[i][1])
+            positionQ_x.append(positionQ[i][0])
+            positionQ_y.append(positionQ[i][1])
+        ax2.plot(positionP_x,positionP_y,label='Pince')
+        ax2.plot(positionQ_x,positionQ_y,label='Coude')
+        ax2.scatter([target[0]],[target[1]],marker='+',s=800,c="red",label='cible')
+        ax2.set_title("Trajectoire")
+        ax2.legend();
+        plt.show()
     
         
     def draw_env(self,target) : 
-        Fig=plt.figure(figsize=(8,8))
+        Fig=plt.figure(figsize=(7,7))
         ax = Fig.add_subplot(111, aspect='equal')
         ax.set_xlim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
         ax.set_ylim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
@@ -79,6 +114,8 @@ class Robot_manipulator_2ddl :
             return line1,line2,pt1
 
         anim = animation.FuncAnimation(Fig, animate, np.arange(1, len(th1)), interval=50, blit=True,repeat = False)
+        if self.save : 
+            anim.save(self.name_file + '.gif',writer=PillowWriter(fps=30))
         plt.show()
 
 

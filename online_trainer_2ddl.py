@@ -24,6 +24,7 @@ class OnlineTrainer_2ddl:
         self.running = True
         self.moment = 0
         self.pas = 0.5
+        self.grad = []
 
     def train(self, targett):
         
@@ -87,12 +88,9 @@ class OnlineTrainer_2ddl:
             print(i)
             crit_ap= alpha_1*(position[0]-target[0])*(position[0]-target[0]) + alpha_2*(position[1]-target[1])*(position[1]-target[1]) 
             selfthetas1,selfthetas2 = self.robot.get_theta()
-            print("manich hna")
             if self.training:
                 delta_t = (time.time()-debut)
-                print("ani hna")
-
-                grad = [
+                self.grad = [
                     2*(-1)*alpha_1*delta_t*(self.robot.L1*math.sin(selfthetas1)+self.robot.L2*math.sin(selfthetas1 + selfthetas2))*(target[0] - position[0])
                     -2*(-1)*alpha_2*delta_t*(self.robot.L1*math.cos(selfthetas1)+ self.robot.L2*math.cos(selfthetas1 + selfthetas2))*(target[1] - position[1]),
                     
@@ -103,10 +101,10 @@ class OnlineTrainer_2ddl:
                 # si critere augmente on BP un bruit fction randon_update, sion on BP le gradient
                 
                 if (crit_ap <= crit_av) :
-                    self.network.backPropagate(grad,self.pas,self.moment)# grad, pas d'app, moment
+                    self.network.backPropagate(self.grad,self.pas,self.moment)# grad, pas d'app, moment
                 else :
                     #self.network.random_update(0.001)
-                    self.network.backPropagate(grad, self.pas ,self.moment)
+                    self.network.backPropagate(self.grad, self.pas ,self.moment)
                     
         #self.robot.train(th1,th2) 
         #self.robot.set_theta([0,0]) # stop  apres arret  du prog d'app                 # Fonction à changer 
@@ -116,3 +114,6 @@ class OnlineTrainer_2ddl:
              
                 
         return th1,th2
+    
+    def get_grad():
+        return self.grad[0]

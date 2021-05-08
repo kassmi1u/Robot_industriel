@@ -90,6 +90,26 @@ class Robot_manipulator_3ddl :
         ax2.set_title("Trajectoire")
         ax2.legend();
         plt.show()
+
+
+    def draw_grad_graph(self,grad0,grad1,grad2,t) : 
+        fig, ax3 = plt.subplots(figsize=(7,7))
+        ax3.plot(t,grad0,label=' \u2207J1')
+        ax3.plot(t,grad1,label=' \u2207J2')
+        ax3.plot(t,grad2,label=' \u2207J3')
+        ax3.set_title("Gradient \u2207J1,\u2207J2,\u2207J3")
+        ax3.legend();
+        plt.show()
+
+    
+    def draw_velocity_graph(self,velocity0,velocity1,t):
+        fig, ax4 = plt.subplots(figsize=(7,7))
+        ax4.plot(t,velocity0,label=' \u2207J1')
+        ax4.plot(t,velocity1,label=' \u2207J2')
+        ax4.set_title("Velocity \u2207J1,\u2207J2")
+        ax4.legend();
+        plt.show()
+
     
     
         

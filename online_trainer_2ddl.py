@@ -26,7 +26,10 @@ class OnlineTrainer_2ddl:
         self.pas = 0.5
         self.grad0 = []
         self.grad1 = []
-        self.t = []
+        self.velocity0 = []
+        self.velocity1 = []
+        self.t1 = []
+        self.t2 = []
 
     def train(self, targett):
         
@@ -56,12 +59,20 @@ class OnlineTrainer_2ddl:
         i=0
         temp1 = 0
         temp = 0
+        temps2 = 0
+        temps3 = 0 
         while abs(position[0]-target[0]) > 0.001 or  abs(position[1]-target[1]) > 0.001 : 
             """alpha_1 = 1/(max(position_x) - min(position_x))
             alpha_2 = 1/(max(position_y) - min(position_y))"""
             debut = time.time()
             network_input = [(position[0]-target[0])*self.alpha[0], (position[1]-target[1])*self.alpha[1]]
-            command = self.network.runNN(network_input) # propage erreur et calcul vitesses roues instant t  # Fonction à changer
+            command = self.network.runNN(network_input)
+            temps3 = temps3 + temps2
+            temps2 = time.time() - debut
+            self.t2.append(temps2+temps3)
+            self.velocity0.append(command[0])
+            self.velocity1.append(command[1])
+
             crit_av= alpha_1*(position[0]-target[0])*(position[0]-target[0]) + alpha_2*(position[1]-target[1])*(position[1]-target[1]) 
 
             #alpha_x = 1/6 #"""(max(position_x) - min(position_x))"""
@@ -94,9 +105,6 @@ class OnlineTrainer_2ddl:
             selfthetas1,selfthetas2 = self.robot.get_theta()
             if self.training:
                 delta_t = (time.time()-debut)
-                temp1 = temp1 + temp
-                temp = time.time()-robot_a_bouge
-                self.t.append(temp+temp1)
                 grad = [
                     2*(-1)*alpha_1*delta_t*(self.robot.L1*math.sin(selfthetas1)+self.robot.L2*math.sin(selfthetas1 + selfthetas2))*(target[0] - position[0])
                     -2*(-1)*alpha_2*delta_t*(self.robot.L1*math.cos(selfthetas1)+ self.robot.L2*math.cos(selfthetas1 + selfthetas2))*(target[1] - position[1]),
@@ -104,6 +112,9 @@ class OnlineTrainer_2ddl:
                     2*(-1)*alpha_1*delta_t*(self.robot.L2*math.sin(selfthetas1+ selfthetas2))*(target[0] - position[0])
                     -2*(-1)*alpha_2*delta_t*(self.robot.L2*math.cos(selfthetas1+ selfthetas2))*(target[1] - position[1])
                 ]
+                temp1 = temp1 + temp
+                temp = time.time()-robot_a_bouge
+                self.t1.append(temp+temp1)
                 # The two args after grad are the gradient learning steps for t+1 and t
                 # si critere augmente on BP un bruit fction randon_update, sion on BP le gradient
                 self.grad0.append(grad[0])

@@ -149,9 +149,17 @@ boite1.place(x=65,y=106)
 Graph_frame = ttk.LabelFrame(root, text='  Graph  ', width=370, height=130)
 Graph_frame.place(x=605, y=321)
 
-#Trajectory Label 
+# Trajectory Label 
 tragectory_Label = ttk.Label(Graph_frame,text = "The trajectory of the clamp, the elbows .. ")
-tragectory_Label.place(x=15,y=10)
+tragectory_Label.place(x=15,y=7)
+
+# Gradient Label 
+Gradient_Label = ttk.Label(Graph_frame,text = "Gradient \u2207Ji ... as a function of time")
+Gradient_Label.place(x=15,y=47)
+
+# Velocity Label 
+Velocity_Label = ttk.Label(Graph_frame,text = "Velocity \u03C9i ... as a function of time")
+Velocity_Label.place(x=15,y=85)
  
      
 HL_size = int(hidden.get())
@@ -211,7 +219,6 @@ def train_network() :
         thetas1,thetas2 = training.train(target)
     else :
         thetas1,thetas2,thetas3 = training.train(target)
-    robot.draw_grad_graph(training.grad0,training.grad1,training.t)
     state_train = True
     json_obj = {"input_weights": network.wi, "output_weights": network.wo}
     with open(file, 'w') as fp:
@@ -248,7 +255,7 @@ def Reset():
     choise.set(1)
     hidden.set(20)
 
-def plot_graph():
+def plot_Trajectory():
     global robot,thetas1,thetas2,thetas3,target_x,target_y,state_train
     tar = [float(target_x.get()),float(target_y.get())]
     if state_train : 
@@ -256,6 +263,23 @@ def plot_graph():
             robot.draw_Trajectory(thetas1,thetas2,tar)
         else :
             robot.draw_Trajectory(thetas1,thetas2,thetas3,tar)
+
+
+
+def plot_Gradient():
+    global robot,training
+    if state_train : 
+        if int(choise.get()) == 1 :
+            robot.draw_grad_graph(training.grad0,training.grad1,training.t1)
+        else :
+            robot.draw_grad_graph(training.grad0,training.grad1,training.grad2,training.t)
+
+
+def plot_Velocity():
+    global robot,training
+    if state_train : 
+        robot.draw_velocity_graph(training.velocity0,training.velocity1,training.t2)
+
 
 button1= ttk.Button(root, text='Train', width=18, command=train_network)
 button1.place(x=23, y=470)
@@ -269,7 +293,17 @@ button3.place(x=600, y=470)
 button4 = ttk.Button(root, text='Reset',width = 18, command=Reset)
 button4.place(x=408, y=470)
 
-show_button1 = ttk.Button(Graph_frame, text=' Show ',width = 7, command=plot_graph)
-show_button1.place(x=270, y=5)
+show_button1 = ttk.Button(Graph_frame, text=' Show ',width = 7, command=plot_Trajectory)
+show_button1.place(x=270, y=2)
+
+show_button2 = ttk.Button(Graph_frame, text=' Show ',width = 7, command=plot_Gradient)
+show_button2.place(x=270, y=39)
+
+show_button3 = ttk.Button(Graph_frame, text=' Show ',width = 7, command=plot_Velocity)
+show_button3.place(x=270, y=76)
+
+
+
+
 
 root.mainloop()

@@ -24,6 +24,10 @@ class OnlineTrainer_3ddl:
         self.running = True
         self.pas = 0.5
         self.moment = 0
+        self.grad0 = []
+        self.grad1 = []
+        self.grad2 = []
+        self.t = []
 
     def train(self, targett):
         
@@ -46,6 +50,8 @@ class OnlineTrainer_3ddl:
         #network_input[1] = 
         robot_a_bouge = time.time()
         i=0
+        temp = 0
+        temp1 = 0
         while abs(position[0]-target[0]) > 0.001 or  abs(position[1]-target[1]) > 0.001 : 
             debut = time.time()
             network_input = [(position[0]-target[0])*self.alpha[0], (position[1]-target[1])*self.alpha[1]]
@@ -83,7 +89,9 @@ class OnlineTrainer_3ddl:
 
             if self.training:
                 delta_t = (time.time()-debut)
-
+                temp1 = temp1 + temp
+                temp = time.time()-robot_a_bouge
+                self.t.append(temp+temp1)
                 grad = [
                     2*(-1)*alpha_1*delta_t*(self.robot.L1*math.sin(selfthetas1)+self.robot.L2*math.sin(selfthetas1 + selfthetas2)+self.robot.L3*math.sin(selfthetas1 + selfthetas2 + selfthetas3))*(target[0] - position[0])
                     -2*(-1)*alpha_2*delta_t*(self.robot.L1*math.cos(selfthetas1)+ self.robot.L2*math.cos(selfthetas1 + selfthetas2) + self.robot.L3*math.cos(selfthetas1 + selfthetas2 + selfthetas3))*(target[1] - position[1]),
@@ -96,7 +104,9 @@ class OnlineTrainer_3ddl:
                 ]
                 # The two args after grad are the gradient learning steps for t+1 and t
                 # si critere augmente on BP un bruit fction randon_update, sion on BP le gradient
-                
+                self.grad0.append(grad[0])
+                self.grad1.append(grad[1])
+                self.grad2.append(grad[2])
                 if (crit_ap <= crit_av) :
                     self.network.backPropagate(grad, self.pas,self.moment)# grad, pas d'app, moment
                 else :

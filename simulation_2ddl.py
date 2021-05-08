@@ -87,22 +87,22 @@ class Robot_manipulator_2ddl :
         plt.show()
 
     def draw_grad_graph(self,grad0,grad1,t) : 
-        fig, ax2 = plt.subplots(figsize=(12,8))
-        """positionQ, positionP = self.generate_liste_of_coord(th1,th2)
-        positionP_x =[]
-        positionP_y =[]
-        positionQ_x =[]
-        positionQ_y =[]
-        for i in range(len(th1)): 
-            positionP_x.append(positionP[i][0])
-            positionP_y.append(positionP[i][1])
-            positionQ_x.append(positionQ[i][0])
-            positionQ_y.append(positionQ[i][1])"""
-        ax2.plot(t,grad0,label=' grad0 ')
-        #ax2.plot(t,grad1,label=' grad1 ')
-        ax2.set_title("Trajectoire")
-        ax2.legend();
+        fig, ax3 = plt.subplots(figsize=(7,7))
+        ax3.plot(t,grad0,label=' \u2207J1')
+        ax3.plot(t,grad1,label=' \u2207J2')
+        ax3.set_title("Gradient \u2207J1,\u2207J2")
+        ax3.legend();
         plt.show()
+        
+
+    def draw_velocity_graph(self,velocity0,velocity1,t):
+        fig, ax4 = plt.subplots(figsize=(7,7))
+        ax4.plot(t,velocity0,label=' \u2207J1')
+        ax4.plot(t,velocity1,label=' \u2207J2')
+        ax4.set_title("Velocity \u2207J1,\u2207J2")
+        ax4.legend();
+        plt.show()
+
     
         
     def draw_env(self,target) : 

@@ -24,7 +24,9 @@ class OnlineTrainer_2ddl:
         self.running = True
         self.moment = 0
         self.pas = 0.5
-        self.grad = []
+        self.grad0 = []
+        self.grad1 = []
+        self.t = []
 
     def train(self, targett):
         
@@ -52,6 +54,8 @@ class OnlineTrainer_2ddl:
         #network_input[1] = 
         robot_a_bouge = time.time()
         i=0
+        temp1 = 0
+        temp = 0
         while abs(position[0]-target[0]) > 0.001 or  abs(position[1]-target[1]) > 0.001 : 
             """alpha_1 = 1/(max(position_x) - min(position_x))
             alpha_2 = 1/(max(position_y) - min(position_y))"""
@@ -90,7 +94,10 @@ class OnlineTrainer_2ddl:
             selfthetas1,selfthetas2 = self.robot.get_theta()
             if self.training:
                 delta_t = (time.time()-debut)
-                self.grad = [
+                temp1 = temp1 + temp
+                temp = time.time()-robot_a_bouge
+                self.t.append(temp+temp1)
+                grad = [
                     2*(-1)*alpha_1*delta_t*(self.robot.L1*math.sin(selfthetas1)+self.robot.L2*math.sin(selfthetas1 + selfthetas2))*(target[0] - position[0])
                     -2*(-1)*alpha_2*delta_t*(self.robot.L1*math.cos(selfthetas1)+ self.robot.L2*math.cos(selfthetas1 + selfthetas2))*(target[1] - position[1]),
                     
@@ -99,12 +106,13 @@ class OnlineTrainer_2ddl:
                 ]
                 # The two args after grad are the gradient learning steps for t+1 and t
                 # si critere augmente on BP un bruit fction randon_update, sion on BP le gradient
-                
+                self.grad0.append(grad[0])
+                self.grad1.append(grad[1])
                 if (crit_ap <= crit_av) :
-                    self.network.backPropagate(self.grad,self.pas,self.moment)# grad, pas d'app, moment
+                    self.network.backPropagate(grad,self.pas,self.moment)# grad, pas d'app, moment
                 else :
                     #self.network.random_update(0.001)
-                    self.network.backPropagate(self.grad, self.pas ,self.moment)
+                    self.network.backPropagate(grad, self.pas ,self.moment)
                     
         #self.robot.train(th1,th2) 
         #self.robot.set_theta([0,0]) # stop  apres arret  du prog d'app                 # Fonction à changer 
@@ -115,5 +123,3 @@ class OnlineTrainer_2ddl:
                 
         return th1,th2
     
-    def get_grad():
-        return self.grad[0]

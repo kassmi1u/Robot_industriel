@@ -85,6 +85,24 @@ class Robot_manipulator_2ddl :
         ax2.set_title("Trajectoire")
         ax2.legend();
         plt.show()
+
+    def draw_grad_graph(self,grad0,grad1,t) : 
+        fig, ax2 = plt.subplots(figsize=(12,8))
+        """positionQ, positionP = self.generate_liste_of_coord(th1,th2)
+        positionP_x =[]
+        positionP_y =[]
+        positionQ_x =[]
+        positionQ_y =[]
+        for i in range(len(th1)): 
+            positionP_x.append(positionP[i][0])
+            positionP_y.append(positionP[i][1])
+            positionQ_x.append(positionQ[i][0])
+            positionQ_y.append(positionQ[i][1])"""
+        ax2.plot(t,grad0,label=' grad0 ')
+        #ax2.plot(t,grad1,label=' grad1 ')
+        ax2.set_title("Trajectoire")
+        ax2.legend();
+        plt.show()
     
         
     def draw_env(self,target) : 

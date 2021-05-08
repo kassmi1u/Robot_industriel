@@ -182,7 +182,6 @@ def train_network() :
         robot = robot_2ddl
         training = training_2ddl
         file = file_2ddl
-        
     else :
         robot = robot_3ddl
         training = training_3ddl
@@ -212,6 +211,7 @@ def train_network() :
         thetas1,thetas2 = training.train(target)
     else :
         thetas1,thetas2,thetas3 = training.train(target)
+    robot.draw_grad_graph(training.grad0,training.grad1,training.t)
     state_train = True
     json_obj = {"input_weights": network.wi, "output_weights": network.wo}
     with open(file, 'w') as fp:
@@ -219,6 +219,9 @@ def train_network() :
     print("The last weights have been stored in last_w.json")
     print("arrivé")
     
+
+
+
 def animate() : 
     global thetas1,thetas2,thetas3,target_x,target_y,robot
     if int(save_animation.get()) == 1 : 

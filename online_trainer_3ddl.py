@@ -27,7 +27,12 @@ class OnlineTrainer_3ddl:
         self.grad0 = []
         self.grad1 = []
         self.grad2 = []
+        self.velocity0 = []
+        self.velocity1 = []
+        self.error_x = []
+        self.error_y = []
         self.t = []
+        self.t2 = []
 
     def train(self, targett):
         
@@ -52,10 +57,22 @@ class OnlineTrainer_3ddl:
         i=0
         temp = 0
         temp1 = 0
+        temp3 = 0
+        temp4 = 0
         while abs(position[0]-target[0]) > 0.001 or  abs(position[1]-target[1]) > 0.001 : 
             debut = time.time()
             network_input = [(position[0]-target[0])*self.alpha[0], (position[1]-target[1])*self.alpha[1]]
             command = self.network.runNN(network_input) # propage erreur et calcul vitesses roues instant t  # Fonction à changer
+
+            # useful to draw velocity graph 
+            temp4 = temp4 + temp3
+            temp3 = time.time() - robot_a_bouge
+            self.t2.append(temp3+temp4)
+            self.velocity0.append(command[0])
+            self.velocity1.append(command[1])
+            self.error_x.append(position[0]-target[0])
+            self.error_y.append(position[1]-target[1])
+
             crit_av= alpha_1*(position[0]-target[0])*(position[0]-target[0]) + alpha_2*(position[1]-target[1])*(position[1]-target[1]) 
 
             #alpha_x = 1/6 #"""(max(position_x) - min(position_x))"""

@@ -22,6 +22,7 @@ class Robot_manipulator_2ddl :
         self
         self.L1 = 0.5
         self.L2 = 0.5
+
         # to save the animation as Gif file
         self.save = False
         self.name_file = "Animation_001"
@@ -104,6 +105,7 @@ class Robot_manipulator_2ddl :
         ax4.legend();
         plt.show()
 
+    # draw the variations of the gradient as function of time 
     def draw_error_graph(self,error_x,error_y,t):
         fig, ax5 = plt.subplots(figsize=(11,7))
         ax5.plot(t,error_x,label=' error_x')
@@ -123,7 +125,6 @@ class Robot_manipulator_2ddl :
         style.use('fivethirtyeight')
         plt.grid(False)
         ax = Fig.add_subplot(111, aspect='equal')
-        ax.grid()
         ax.set_xlim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
         ax.set_ylim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
         ax.set_title('mouvement du bras de robot',fontsize=16)
@@ -132,9 +133,9 @@ class Robot_manipulator_2ddl :
 
     # define and return the robot parameters of the simulation : robot's arm, goal ...   
     def draw_robot(self,fig,ax) :
-        line1, = ax.plot([0.,self.L1], [0.,0.], 'o-b', lw=7 , markersize=12)
-        line2, = ax.plot([self.L1,self.L1+self.L2], [0.,0.], 'o-', lw=7 )
-        pt1    = ax.scatter([self.L1+self.L2],[0.],marker="3",s=500,c="black",zorder=2)
+        line1, = ax.plot([0.,self.L1], [0.,0.], '#EC764A', lw=12 , marker='.', markersize=50, markerfacecolor='#EC764A', markeredgecolor='#444140')
+        line2, = ax.plot([self.L1,self.L1+self.L2], [0.,0.], '#FF7F50', lw=12 , marker='.', markersize=30, markerfacecolor='#FF7F50', markeredgecolor='#444140')
+        pt1    = ax.scatter([self.L1+self.L2],[0.],marker='3', s=1500,c="#444140",zorder=6)        
         return line1,line2,pt1
         
     # initiate the animation 
@@ -147,6 +148,8 @@ class Robot_manipulator_2ddl :
             line2.set_data([P[i][0],Q[i][0]],[P[i][1],Q[i][1]])
             pt1.set_offsets([Q[i][0],Q[i][1]])
             return line1,line2,pt1
+
+        # Start animation
         anim = animation.FuncAnimation(Fig, animate, np.arange(1, len(th1)), interval=50, blit=True,repeat = False)
         if self.save : 
             anim.save(self.name_file + '.gif',writer=PillowWriter(fps=30))

@@ -9,7 +9,7 @@ from matplotlib.animation import PillowWriter
 from matplotlib import style
 from matplotlib import rcParams
 rcParams['font.family'] = 'serif'
-rcParams['font.size'] = 14
+rcParams['font.size'] = 10
 
 
 class Robot_manipulator_3ddl : 
@@ -141,12 +141,12 @@ class Robot_manipulator_3ddl :
         ax.scatter([target[0]],[target[1]],marker='+',s=400,c="red")
         return Fig,ax
 
-    # define and return the robot parameters of the simulation : robot's arm, goal ...    
+    # define and return the robot parameters of the simulation : robot's arm, goal ...   
     def draw_robot(self,fig,ax) :
-        line1, = ax.plot([0.,self.L1], [0.,0.], 'o-b', lw=7 , markersize=12)
-        line2, = ax.plot([self.L1,self.L1+self.L2], [0.,0.], 'o-', lw=7 , markersize=12)
-        line3, = ax.plot([self.L1+self.L2,self.L1+self.L2+self.L3], [0.,0.], 'o-', lw=7 ) 
-        pt1    = ax.scatter([self.L1+self.L2+self.L3],[0.],marker="3",s=500,c="black",zorder=2)
+        line1, = ax.plot([0.,self.L1], [0.,0.], '#EC764A', lw=12 , marker='.', markersize=50, markerfacecolor='#EC764A', markeredgecolor='#444140')
+        line2, = ax.plot([self.L1,self.L1+self.L2], [0.,0.], '#FF7F50', lw=12 , marker='.', markersize=50, markerfacecolor='#FF7F50', markeredgecolor='#444140')
+        line3, = ax.plot([self.L1+self.L2,self.L1+self.L2+self.L3], [0.,0.], '#FF7F50', lw=12 , marker='.', markersize=50, markerfacecolor='#FF7F50', markeredgecolor='#444140')
+        pt1    = ax.scatter([self.L1+self.L2],[0.],marker='3', s=1500,c="#444140",zorder=6)        
         return line1,line2,line3,pt1
         
     # initiate the animation
@@ -161,6 +161,7 @@ class Robot_manipulator_3ddl :
             pt1.set_offsets([X[i][0],X[i][1]])
             return line1,line2,line3,pt1
 
+        # Start animation
         anim = animation.FuncAnimation(Fig, animate, np.arange(1, len(th1)), interval=50, blit=True,repeat = False)
         if self.save : 
             anim.save(self.animation_name + '.gif',writer=PillowWriter(fps=30))

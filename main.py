@@ -373,6 +373,7 @@ def animate() :
     tar = [float(target_x.get()),float(target_y.get())]
     Fig, ax = robot.draw_env(tar)
     if int(choise.get()) == 1 :
+        rectangle = robot.draw_obstacle(Fig,ax)                
         line1, line2, pt1 = robot.draw_robot(Fig,ax)
         robot.train(thetas1,thetas2,line1,line2,pt1,Fig) 
     else :

@@ -132,9 +132,9 @@ class Robot_manipulator_3ddl :
     def draw_env(self,target) : 
         Fig=plt.figure(figsize=(8,8))
         style.use('fivethirtyeight')
-        plt.grid(False)
+        #plt.grid(False)
         ax = Fig.add_subplot(111, aspect='equal')
-        ax.grid()
+        #ax.grid()
         ax.set_xlim((-1.1*(self.L1+self.L2+self.L3),1.1*(self.L1+self.L2+self.L3)))
         ax.set_ylim((-1.1*(self.L1+self.L2+self.L3),1.1*(self.L1+self.L2+self.L3)))
         ax.set_title('mouvement du bras de robot',fontsize=16)
@@ -143,10 +143,10 @@ class Robot_manipulator_3ddl :
 
     # define and return the robot parameters of the simulation : robot's arm, goal ...   
     def draw_robot(self,fig,ax) :
-        line1, = ax.plot([0.,self.L1], [0.,0.], '#EC764A', lw=12 , marker='.', markersize=50, markerfacecolor='#EC764A', markeredgecolor='#444140')
-        line2, = ax.plot([self.L1,self.L1+self.L2], [0.,0.], '#FF7F50', lw=12 , marker='.', markersize=50, markerfacecolor='#FF7F50', markeredgecolor='#444140')
-        line3, = ax.plot([self.L1+self.L2,self.L1+self.L2+self.L3], [0.,0.], '#FF7F50', lw=12 , marker='.', markersize=50, markerfacecolor='#FF7F50', markeredgecolor='#444140')
-        pt1    = ax.scatter([self.L1+self.L2],[0.],marker='3', s=1500,c="#444140",zorder=6)        
+        line1, = ax.plot([0.,self.L1], [0.,0.], '#EC764A', lw=12, marker='.', markersize=55, markerfacecolor='#EC764A', markeredgecolor='#444140')
+        line2, = ax.plot([self.L1,self.L1+self.L2], [0.,0.], '#FF7F50', lw=12 , marker='.', markersize=40, markerfacecolor='#FF7F50', markeredgecolor='#444140')
+        line3, = ax.plot([self.L1+self.L2,self.L1+self.L2+self.L3], [0.,0.], '#FF7F50', lw=12 , marker='.', markersize=30, markerfacecolor='#FF7F50', markeredgecolor='#444140')
+        pt1    = ax.scatter([self.L1+self.L2+self.L3],[0.],marker='3', s=1500,c="#444140",zorder=6)        
         return line1,line2,line3,pt1
         
     # initiate the animation

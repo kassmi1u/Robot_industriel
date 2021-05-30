@@ -10,6 +10,7 @@ from matplotlib import style
 from matplotlib import rcParams
 rcParams['font.family'] = 'serif'
 rcParams['font.size'] = 10
+from matplotlib.patches import Rectangle
 
 class Robot_manipulator_2ddl : 
 
@@ -26,6 +27,12 @@ class Robot_manipulator_2ddl :
         # to save the animation as Gif file
         self.save = False
         self.name_file = "Animation_001"
+        
+        #Obstacle_sol
+        self.x = -1.8
+        self.y = 0
+        self.w = 3.6
+        self.h = -1.8        
 
     # Apply new values to self.theta1s and self.theta2s
     def set_theta(self,nv_th1,nv_th2) :
@@ -123,7 +130,7 @@ class Robot_manipulator_2ddl :
     def draw_env(self,target) : 
         Fig=plt.figure(figsize=(8,8))
         style.use('fivethirtyeight')
-        plt.grid(False)
+        #plt.grid(False)
         ax = Fig.add_subplot(111, aspect='equal')
         ax.set_xlim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
         ax.set_ylim((-1.2*(self.L1+self.L2),1.2*(self.L1+self.L2)))
@@ -137,6 +144,9 @@ class Robot_manipulator_2ddl :
         line2, = ax.plot([self.L1,self.L1+self.L2], [0.,0.], '#FF7F50', lw=12 , marker='.', markersize=30, markerfacecolor='#FF7F50', markeredgecolor='#444140')
         pt1    = ax.scatter([self.L1+self.L2],[0.],marker='3', s=1500,c="#444140",zorder=6)        
         return line1,line2,pt1
+    
+    def draw_obstacle(self,fig,ax):
+        rectangle=ax.add_patch(Rectangle((self.x, self.y), self.w, self.h,color="#383433"))
         
     # initiate the animation 
     def train(self,th1,th2,line1,line2,pt1,Fig):

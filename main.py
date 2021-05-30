@@ -1,3 +1,5 @@
+
+
 from online_trainer_2ddl import OnlineTrainer_2ddl
 from online_trainer_3ddl import OnlineTrainer_3ddl
 from BackProp_Python_v2 import NN
@@ -6,6 +8,7 @@ from simulation_3ddl import Robot_manipulator_3ddl
 import numpy as np
 import time 
 import math
+import webbrowser
 import random
 import json
 import tkinter as tk
@@ -444,6 +447,10 @@ def plot_error():
             then you can view the graphs !  "
         notif(notification)
 
+def Tuto(): 
+
+    webbrowser.open('https://sites.google.com/view/arm-robot-simulator/accueil')
+
 
 # Buttons 
 button1= ttk.Button(root, text='Train', width=18, command=train_network)
@@ -458,7 +465,7 @@ button3.place(x=600, y=470)
 button4 = ttk.Button(root, text='Reset',width = 18, command=Reset)
 button4.place(x=408, y=470)
 
-button5 = ttk.Button(root,text='Tuto',width = 18, command=Reset)
+button5 = ttk.Button(root,text='Tutoriel',width = 18, command=Tuto)
 button5.place(x=792,y=470)
 
 show_button1 = ttk.Button(Graph_frame, text=' Show ',width = 7, command=plot_Trajectory)

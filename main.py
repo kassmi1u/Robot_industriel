@@ -287,7 +287,7 @@ def train_network() :
             else : 
                 network = NN(4,HL_size,2)
         else : 
-            network = NN(3,HL_size,2)
+            network = NN(2,HL_size,2)
         robot_2ddl = Robot_manipulator_2ddl()
         robot_3ddl = Robot_manipulator_3ddl()   
         training_2ddl = OnlineTrainer_2ddl(robot_2ddl,network)

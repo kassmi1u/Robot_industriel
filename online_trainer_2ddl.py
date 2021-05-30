@@ -82,7 +82,7 @@ class OnlineTrainer_2ddl:
                     self.alpha[2]*((selfthetas11-self.articulation1_moy)/(self.articulation1_max-self.articulation1_min)**2),\
                          self.alpha[3]*((selfthetas22-self.articulation2_moy)/(self.articulation2_max-self.articulation2_min)**2)]
             else : 
-                network_input = [(position[0]-target[0])*self.alpha[0], (position[1]-target[1])*self.alpha[1],yp*alpha_5*b]
+                network_input = [(position[0]-target[0])*self.alpha[0], (position[1]-target[1])*self.alpha[1]]#,yp*alpha_5*b ]
             
             # Velocity
             command = self.network.runNN(network_input)
@@ -121,10 +121,10 @@ class OnlineTrainer_2ddl:
             print(i)
             selfthetas1,selfthetas2 = self.robot.get_theta()
 
-            if position[1] < 0: 
+            """ if position[1] < 0: 
                 b = 1
             else : 
-                b = 0
+                b = 0"""
 
             
 
@@ -151,12 +151,12 @@ class OnlineTrainer_2ddl:
                     # Withtout articulations case
                     grad = [
                         2*(-1)*alpha_1*delta_t*(self.robot.L1*math.sin(selfthetas1)+self.robot.L2*math.sin(selfthetas1 + selfthetas2))*(target[0] - position[0])
-                        -2*(-1)*alpha_2*delta_t*(self.robot.L1*math.cos(selfthetas1)+ self.robot.L2*math.cos(selfthetas1 + selfthetas2))*(target[1] - position[1])
-                        + 2*alpha_5*b*(self.robot.L1*self.robot.L1*delta_t*math.cos(selfthetas1 + delta_t*command[0])*math.sin(selfthetas1+delta_t*command[0]) +self.robot.L2*self.robot.L2*delta_t*math.cos(selfthetas1 + selfthetas2 + delta_t*(command[0]+command[1]))*math.sin(selfthetas1 + selfthetas2 + delta_t*(command[0]+command[1]))+self.robot.L1*self.robot.L2*delta_t*math.sin(2*(selfthetas1+delta_t*command[0])+selfthetas2+delta_t*command[1])),
+                        -2*(-1)*alpha_2*delta_t*(self.robot.L1*math.cos(selfthetas1)+ self.robot.L2*math.cos(selfthetas1 + selfthetas2))*(target[1] - position[1]),
+                        #+ 2*alpha_5*b*(self.robot.L1*self.robot.L1*delta_t*math.cos(selfthetas1 + delta_t*command[0])*math.sin(selfthetas1+delta_t*command[0]) +self.robot.L2*self.robot.L2*delta_t*math.cos(selfthetas1 + selfthetas2 + delta_t*(command[0]+command[1]))*math.sin(selfthetas1 + selfthetas2 + delta_t*(command[0]+command[1]))+self.robot.L1*self.robot.L2*delta_t*math.sin(2*(selfthetas1+delta_t*command[0])+selfthetas2+delta_t*command[1])),
                         
                         2*(-1)*alpha_1*delta_t*(self.robot.L2*math.sin(selfthetas1+ selfthetas2))*(target[0] - position[0])
                         -2*(-1)*alpha_2*delta_t*(self.robot.L2*math.cos(selfthetas1+ selfthetas2))*(target[1] - position[1])
-                        + 2*alpha_5*b*(self.robot.L2*self.robot.L2*delta_t*math.cos(selfthetas1 + selfthetas2 + delta_t*(command[0]+command[1]))*math.sin(selfthetas1 + selfthetas2 + delta_t*(command[0]+command[1]))+self.robot.L1*self.robot.L2*delta_t*math.sin(selfthetas1+delta_t*command[0])*math.cos(selfthetas1+selfthetas2+delta_t*(command[0]+command[1])))
+                        #+ 2*alpha_5*b*(self.robot.L2*self.robot.L2*delta_t*math.cos(selfthetas1 + selfthetas2 + delta_t*(command[0]+command[1]))*math.sin(selfthetas1 + selfthetas2 + delta_t*(command[0]+command[1]))+self.robot.L1*self.robot.L2*delta_t*math.sin(selfthetas1+delta_t*command[0])*math.cos(selfthetas1+selfthetas2+delta_t*(command[0]+command[1])))
                     ]
 
                 self.network.backPropagate(grad, self.pas ,self.moment)
